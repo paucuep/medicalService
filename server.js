@@ -34,6 +34,6 @@ app.use('/consulta',consulta);
 //   res.sendFile(path.join(__dirname, 'dist/index.html'));
 // });
 
-app.listen(port, function(){
+app.listen(process.env.PORT || 5000, function(){
     console.log("Server running on localhost:" + port);
 });
