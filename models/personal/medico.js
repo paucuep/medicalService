@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const medicoSchema = new Schema({
     _id: String,
-    id: String,
+    id: Number,
     id_centro: { type: Number },
     area:[{
         id:Number,
