@@ -12,6 +12,7 @@ const unidad_medida = require('./routes/unidad_medida')
 const alergia = require('./routes/cie/alergia')
 const consulta = require('./routes/paciente/consulta')
 const cita = require('./routes/paciente/cita')
+const personal_medico = require('./routes/personal/medico')
 
 const port = 3000;
 
@@ -31,6 +32,7 @@ app.use('/generico_concentracion',generico_concentracion);
 app.use('/alergia',alergia);
 app.use('/consulta',consulta);
 app.use('/cita',cita);
+app.use('/medico',medico);
 
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'dist/index.html'));
