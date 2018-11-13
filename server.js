@@ -32,7 +32,7 @@ app.use('/generico_concentracion',generico_concentracion);
 app.use('/alergia',alergia);
 app.use('/consulta',consulta);
 app.use('/cita',cita);
-app.use('/medico',medico);
+app.use('/medico',personal_medico);
 
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'dist/index.html'));
