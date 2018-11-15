@@ -29,7 +29,7 @@ router.get('/all', (req, res) => {
 
 router.get('/:id', (req, res) => {
     console.log(req.query.id);
-    personal_medico.find({ id: req.query.id}, function (err, product) {
+    personal_medico.findOne({ _id: req.query.id}, function (err, product) {
         if (err) {
             console.log(err)
         } else {
@@ -51,7 +51,8 @@ router.post('/add', (req, res) => {
             }
         })
     } else {
-        console.log('inserta nuev');
+
+        medico._id=mongoose.Types.ObjectId();
         medico.save((err, registeredpaciente_Cita) => {
             if (err) {
                 console.log(err)
