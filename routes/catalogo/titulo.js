@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const paciente_Cita = require('../../models/paciente/cita');
+const catalogo_Titulo = require('../../models/catalogo/titulo');
 const jwt = require('jsonwebtoken')
 const db = "mongodb://pcuellar:Prcp1986@ds141043.mlab.com:41043/medical";
 // mongoose.Promise = global.Promise;
@@ -16,10 +16,8 @@ mongoose.connect(db, function (err) {
 
 
 router.get('/all', (req, res) => {
-    paciente_Cita.aggregate([
+    catalogo_Titulo.aggregate([
         { $sort: { nombre: 1 } },
-        { $match: { "paciente_Cita.0": { "$gte": 1 } } },
-
     ], function (err, product) {
         if (err) {
             console.error('Error! ' + err)
@@ -33,7 +31,7 @@ router.get('/all', (req, res) => {
 
 router.get('/:id', (req, res) => {
     console.log(req.query.id);
-    paciente_Cita.find({ id: req.query.id}, function (err, product) {
+    catalogo_Titulo.find({ id: req.query.id}, function (err, product) {
         if (err) {
             console.log(err)
         } else {
@@ -43,21 +41,10 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/add', (req, res) => {
-    let paciente_CitaData = req.body;
-    let paciente_cita = new paciente_Cita(paciente_CitaData)
-
-
-
-    var c = paciente_cita.hora.toString().split(':');
-    var e = new Date(paciente_cita.fecha);
-
-    var d = new Date((e.getFullYear()),(e.getMonth()),(e.getDate()+1),(c[0]-6),(c[1]));
-
-    paciente_cita.fecha=d;
-    paciente_cita.start=d;
-console.log(d);
-    if (paciente_cita._id != null) {
-        paciente_Cita.findOneAndUpdate(paciente_cita._id,paciente_cita, function (err, product) {
+    let tituloData = req.body;
+    let titulo = new catalogo_Titulo(tituloData)
+    if (titulo._id != null) {
+        catalogo_Titulo.findOneAndUpdate(titulo._id,titulo, function (err, product) {
             if (err) {
                 console.log(err)
             } else {
@@ -66,13 +53,13 @@ console.log(d);
         })
     } else {
         console.log('inserta nuev');
-        paciente_cita._id=mongoose.Types.ObjectId();
-        paciente_cita.save((err, registeredpaciente_Cita) => {
+        titulo._id=mongoose.Types.ObjectId();
+        catalogo_Titulo.save((err, registeredtitulo) => {
             if (err) {
                 console.log(err)
             } else {
                 console.log('entra');
-                res.status(200).send(registeredpaciente_Cita)
+                res.status(200).send(registeredtitulo)
             }
         })
     }

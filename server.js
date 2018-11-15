@@ -13,6 +13,7 @@ const alergia = require('./routes/cie/alergia')
 const consulta = require('./routes/paciente/consulta')
 const cita = require('./routes/paciente/cita')
 const personal_medico = require('./routes/personal/medico')
+const catalogo_titulo = require('./routes/catalogo/titulo')
 
 const port = 3000;
 
@@ -33,6 +34,7 @@ app.use('/alergia',alergia);
 app.use('/consulta',consulta);
 app.use('/cita',cita);
 app.use('/medico',personal_medico);
+app.use('/titulo',catalogo_titulo);
 
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'dist/index.html'));
