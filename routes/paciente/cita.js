@@ -16,24 +16,42 @@ mongoose.connect(db, function (err) {
 
 
 router.get('/all', (req, res) => {
-    paciente_Cita.aggregate([
-        { $sort: { nombre: 1 } },
-        { $match: { "paciente_Cita.0": { "$gte": 1 } } },
+    console.log(req.query.id);
+    let _id = req.query.id;
+    if (_id != null) {
+        paciente_Cita.aggregate([
+            { $sort: { nombre: 1 } },
+            { $match: { medico_id: _id } }
 
-    ], function (err, product) {
-        if (err) {
-            console.error('Error! ' + err)
-        } else {
-            res.send(product);
-        }
-    })
+
+        ], function (err, product) {
+            if (err) {
+                console.error('Error! ' + err)
+            } else {
+                res.send(product);
+            }
+        })
+    }
+    else {
+        paciente_Cita.aggregate([
+            { $sort: { nombre: 1 } },
+
+
+        ], function (err, product) {
+            if (err) {
+                console.error('Error! ' + err)
+            } else {
+                res.send(product);
+            }
+        })
+    }
 });
 
 
 
 router.get('/:id', (req, res) => {
     console.log(req.query.id);
-    paciente_Cita.find({ id: req.query.id}, function (err, product) {
+    paciente_Cita.find({ id: req.query.id }, function (err, product) {
         if (err) {
             console.log(err)
         } else {
@@ -51,22 +69,22 @@ router.post('/add', (req, res) => {
     var c = paciente_cita.hora.toString().split(':');
     var e = new Date(paciente_cita.fecha);
 
-    var d = new Date((e.getFullYear()),(e.getMonth()),(e.getDate()+1),(c[0]-6),(c[1]));
+    var d = new Date((e.getFullYear()), (e.getMonth()), (e.getDate() + 1), (c[0] - 6), (c[1]));
 
-    paciente_cita.fecha=d;
-    paciente_cita.start=d;
-console.log(d);
+    paciente_cita.fecha = d;
+    paciente_cita.start = d;
+    console.log(d);
     if (paciente_cita._id != null) {
-        paciente_Cita.findOneAndUpdate(paciente_cita._id,paciente_cita, function (err, product) {
+        paciente_Cita.findOneAndUpdate(paciente_cita._id, paciente_cita, function (err, product) {
             if (err) {
                 console.log(err)
             } else {
-               console.log('update bien');
+                console.log('update bien');
             }
         })
     } else {
         console.log('inserta nuev');
-        paciente_cita._id=mongoose.Types.ObjectId();
+        paciente_cita._id = mongoose.Types.ObjectId();
         paciente_cita.save((err, registeredpaciente_Cita) => {
             if (err) {
                 console.log(err)

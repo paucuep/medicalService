@@ -6,9 +6,8 @@ const medicoSchema = new Schema({
     _id: String,
     id: Number,
     id_centro: { type: Number },
-    area:[{
-        id:Number,
-        Nombre:String
+    especialidad:[{
+        nombre:String
     }],
     color:String,
     cedula: [{
@@ -20,6 +19,7 @@ const medicoSchema = new Schema({
         id: Number,
         nombre: String
     }],
+    id_titulo:String,
     titulo: String,
     nombre_completo: String,
     nombre: String,

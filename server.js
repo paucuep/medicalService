@@ -14,6 +14,8 @@ const consulta = require('./routes/paciente/consulta')
 const cita = require('./routes/paciente/cita')
 const personal_medico = require('./routes/personal/medico')
 const catalogo_titulo = require('./routes/catalogo/titulo')
+const catalogo_especialidad = require('./routes/catalogo/especialidad')
+const catalogo_servicio = require('./routes/catalogo/servicio')
 
 const port = 3000;
 
@@ -35,6 +37,8 @@ app.use('/consulta',consulta);
 app.use('/cita',cita);
 app.use('/medico',personal_medico);
 app.use('/titulo',catalogo_titulo);
+app.use('/servicio',catalogo_servicio);
+app.use('/especialidad',catalogo_especialidad);
 
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'dist/index.html'));

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const personal_medico = require('../../models/personal/medico');
+const Catalogo = require('../../models/catalogo/especialidad');
 const jwt = require('jsonwebtoken')
 const db = "mongodb://pcuellar:Prcp1986@ds141043.mlab.com:41043/medical";
 // mongoose.Promise = global.Promise;
@@ -16,7 +16,7 @@ mongoose.connect(db, function (err) {
 
 
 router.get('/all', (req, res) => {
-    personal_medico.aggregate([{ $sort: { nombre: 1 } }], function (err, product) {
+    Catalogo.aggregate([{ $sort: { nombre: 1 } }], function (err, product) {
         if (err) {
             console.error('Error! ' + err)
         } else {
@@ -29,19 +29,7 @@ router.get('/all', (req, res) => {
 
 router.get('/:id', (req, res) => {
     console.log(req.query);
-    personal_medico.findOne({ _id: req.query.id}, function (err, product) {
-        if (err) {
-            console.log(err)
-        } else {
-            res.send(product);
-        }
-
-    })
-});
-
-router.get('/:especialidad', (req, res) => {
-    console.log(req.query);
-    personal_medico.find({ especialidad: req.query.id}, function (err, product) {
+    Catalogo.findOne({ _id: req.query.id}, function (err, product) {
         if (err) {
             console.log(err)
         } else {
@@ -52,12 +40,12 @@ router.get('/:especialidad', (req, res) => {
 });
 
 router.post('/add', (req, res) => {
-    let personal_medicoData = req.body;
-    let medico = new personal_medico(personal_medicoData)
-console.log(medico);
-    if (medico._id != null) {
+    let data = req.body;
+    let catalogo = new Catalogo(data)
+console.log(catalogo);
+    if (catalogo._id != null) {
         console.log('entra a update');
-        personal_medico.findByIdAndUpdate(medico._id, req.body, function (err, product) {
+        Catalogo.findByIdAndUpdate(catalogo._id, req.body, function (err, product) {
             if (err) {
                 console.log(err)
             } else {
@@ -66,8 +54,8 @@ console.log(medico);
         })
     } else {
 
-        medico._id=mongoose.Types.ObjectId();
-        medico.save((err, registeredpaciente_Cita) => {
+        catalogo._id=mongoose.Types.ObjectId();
+        catalogo.save((err, registeredpaciente_Cita) => {
             if (err) {
                 console.log(err)
             } else {
