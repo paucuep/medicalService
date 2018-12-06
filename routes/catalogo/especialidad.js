@@ -28,7 +28,6 @@ router.get('/all', (req, res) => {
 
 
 router.get('/:id', (req, res) => {
-    console.log(req.query);
     Catalogo.findOne({ _id: req.query.id}, function (err, product) {
         if (err) {
             console.log(err)
@@ -42,9 +41,7 @@ router.get('/:id', (req, res) => {
 router.post('/add', (req, res) => {
     let data = req.body;
     let catalogo = new Catalogo(data)
-console.log(catalogo);
     if (catalogo._id != null) {
-        console.log('entra a update');
         Catalogo.findByIdAndUpdate(catalogo._id, req.body, function (err, product) {
             if (err) {
                 console.log(err)

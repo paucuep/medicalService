@@ -1,0 +1,87 @@
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+
+const schema = new Schema({
+    _id: String,
+    id_expediente: Number,
+    nombre: String,
+    paterno: String,
+    materno: String,
+    nombre_completo:String,
+    sexo:String,    
+    fecha_nacimiento: Date,
+    curp:String,
+    estado_civil:String,
+    edad:Number,
+    correo: String,
+    telefono: String,
+    observaciones: String,
+    tipo_promocion:String,
+    referencia:String,
+    domicilio: [{
+        calle :String,
+        colonia:String,
+        numero_exterior:String,
+        numero_interior:String,
+        codigo_postal:String,
+        localidad:String,
+        municipio:String,
+        estado:String,
+        pais:String,
+        domicilio:String,
+        usuario: String,
+        fecha: Date,
+    }],
+    emergencia: [{
+        nombre :String,
+        correo:String,
+        telefono:String,
+        observaciones:String,
+        parentesco:String,        
+        usuario: String,
+        fecha: Date,
+    }],
+    aseguradora: [{
+        nombre :String,
+        tipo:String,
+        poliza:String,
+        observaciones:String,       
+        usuario: String,
+        fecha: Date,
+    }],
+    documentos: [{
+        nombre :String,
+        tipo:String,
+        ruta:String,   
+        usuario: String,
+        fecha: Date,
+    }],
+    fiscal: [{
+        rfc:String,
+        razon_social:String,
+        calle :String,
+        colonia:String,
+        numero_exterior:String,
+        numero_interior:String,
+        codigo_postal:String,
+        localidad:String,
+        municipio:String,
+        estado:String,
+        pais:String,
+        usuario: String,
+        fecha: Date,
+    }],
+    bitacora: [{
+        usuario: String,
+        fecha: Date,
+        Accion: String
+    }],
+    alta_fecha: Date,
+    alta_usuario: Number,
+    cambio_fecha: Date,
+    cambio_usuario: Number,
+    activo: Boolean
+});
+
+module.exports = mongoose.model('paciente_perfil', schema, 'paciente_perfil');

@@ -25,23 +25,21 @@ router.get('/all', (req, res) => {
     })
 });
 
-
-
-router.get('/:id', (req, res) => {
-    console.log(req.query);
-    Catalogo.findOne({ _id: req.query.id}, function (err, product) {
+router.get('/especialidad', (req, res) => {
+    Catalogo.aggregate([
+        { $match: { especialidad_id: req.query.id } },
+        { $sort: { nombre: 1 } 
+    }], function (err, product) {
         if (err) {
-            console.log(err)
+            console.error('Error! ' + err)
         } else {
             res.send(product);
         }
-
     })
 });
 
-router.get('/:especialidad', (req, res) => {
-    console.log(req.query);
-    Catalogo.findOne({ especialidad_id: req.query.id}, function (err, product) {
+router.get('/:id', (req, res) => {
+    Catalogo.findOne({ _id: req.query.id }, function (err, product) {
         if (err) {
             console.log(err)
         } else {
@@ -54,7 +52,7 @@ router.get('/:especialidad', (req, res) => {
 router.post('/add', (req, res) => {
     let data = req.body;
     let catalogo = new Catalogo(data)
-    catalogo.costo=catalogo.costo.toString().replace(",","");
+    catalogo.costo = catalogo.costo.toString().replace(",", "");
     if (catalogo._id != null) {
         console.log('entra a update');
         Catalogo.findByIdAndUpdate(catalogo._id, req.body, function (err, registered) {
@@ -66,7 +64,7 @@ router.post('/add', (req, res) => {
         })
     } else {
 
-        catalogo._id=mongoose.Types.ObjectId();
+        catalogo._id = mongoose.Types.ObjectId();
         catalogo.save((err, registered) => {
             if (err) {
                 console.log(err)

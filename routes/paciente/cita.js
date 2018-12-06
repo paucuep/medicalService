@@ -15,15 +15,31 @@ mongoose.connect(db, function (err) {
 });
 
 
-router.get('/all', (req, res) => {
-    console.log(req.query.id);
+router.get('/paciente', (req, res) => {
+    console.log('entra a paciente: '+ req.query.paciente);
+    let _id = req.query.paciente;
+    if (_id != null) {
+        paciente_Cita.aggregate([
+            { $sort: { nombre: 1 } },
+            { $match: { id_paciente: _id } }
+        ], function (err, product) {
+            if (err) {
+                console.error('Error! ' + err)
+            } else {
+                res.status(200).send(product)
+            }
+        })
+    }
+   
+});
+
+
+router.get('/calendario', (req, res) => {
     let _id = req.query.id;
     if (_id != null) {
         paciente_Cita.aggregate([
             { $sort: { nombre: 1 } },
             { $match: { medico_id: _id } }
-
-
         ], function (err, product) {
             if (err) {
                 console.error('Error! ' + err)
@@ -47,11 +63,64 @@ router.get('/all', (req, res) => {
     }
 });
 
+router.get('/all', (req, res) => {
+    let _id = req.query.id;
+    let fecha = req.query.fecha;
+
+
+    let fechamayor=new Date();
+    let fechamenor=new Date();
+
+    if(fecha!=null){
+        var result = new Date(fecha);
+        result.setDate(result.getDate() + 1);
+    
+        fechamayor = result;
+        result = new Date(fecha);
+        result.setDate(result.getDate() - 1);
+        fechamenor = result;
+    }
+    else{
+        fechamayor.setDate(fechamayor.getDate() + 1);
+        fechamenor.setDate(fechamenor.getDate() - 1);
+    }
+
+  
+    if (_id != null) {
+        paciente_Cita.aggregate([
+            { $sort: { id_estatus: 1 ,hora:1} },
+            { $match: { medico_id: _id, start: { $lte: fechamayor, $gte: fechamenor } } }
+
+
+        ], function (err, product) {
+            if (err) {
+                console.error('Error! ' + err)
+            } else {
+                res.send(product);
+            }
+        })
+    }
+    else {
+        paciente_Cita.aggregate([
+            { $sort: { id_estatus: 1 ,hora:1} },
+            { $match: { start: { $lte: fechamayor, $gte: fechamenor } } }
+
+        ], function (err, product) {
+            if (err) {
+                console.error('Error! ' + err)
+            } else {
+                res.send(product);
+            }
+        })
+    }
+});
+
 
 
 router.get('/:id', (req, res) => {
+    console.log('entra a cita id');
     console.log(req.query.id);
-    paciente_Cita.find({ id: req.query.id }, function (err, product) {
+    paciente_Cita.find({ _id: req.query.id }, function (err, product) {
         if (err) {
             console.log(err)
         } else {
@@ -60,12 +129,43 @@ router.get('/:id', (req, res) => {
     })
 });
 
-router.post('/add', (req, res) => {
+
+router.post('/edit', (req, res) => {
     let paciente_CitaData = req.body;
     let paciente_cita = new paciente_Cita(paciente_CitaData)
+    console.log(req.body);
+    var c = paciente_cita.hora.toString().split(':');
+    var e = new Date(paciente_cita.fecha);
+
+    if (paciente_cita.fecha.toString().includes('GMT')) {
+        var c = paciente_cita.hora.toString().split(':');
+        var e = new Date(paciente_cita.start);
+
+        var d = new Date((e.getFullYear()), (e.getMonth()), (e.getDate()), (c[0] - 6), (c[1]));
+
+        paciente_cita.fecha = d;
+        paciente_cita.start = d;
+        console.log(d);
+    }
+
+    if (paciente_cita._id != null) {
+        console.log('entra a update');
+        paciente_Cita.findByIdAndUpdate(paciente_cita._id, req.body, function (err, product) {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log('update bien');
+                res.status(200).send(product)
+            }
+        })
+    }
+})
 
 
-
+router.post('/add', (req, res) => {
+    console.log('entra a actualizar');
+    let paciente_CitaData = req.body;
+    let paciente_cita = new paciente_Cita(paciente_CitaData)
     var c = paciente_cita.hora.toString().split(':');
     var e = new Date(paciente_cita.fecha);
 
@@ -75,7 +175,7 @@ router.post('/add', (req, res) => {
     paciente_cita.start = d;
     console.log(d);
     if (paciente_cita._id != null) {
-        paciente_Cita.findOneAndUpdate(paciente_cita._id, paciente_cita, function (err, product) {
+        paciente_Cita.findByIdAndUpdate(paciente_cita._id, paciente_cita, function (err, product) {
             if (err) {
                 console.log(err)
             } else {
