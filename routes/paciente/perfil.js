@@ -28,8 +28,9 @@ router.get('/all', (req, res) => {
 router.get('/nombre', (req, res) => {
     console.log('entra por nombre');
     console.log(req.query);
+    let nombre=req.query.nombre.toString().toLowerCase();
     Catalogo.aggregate([
-        { $match: { nombre_completo: req.query.nombre } },
+        { $match: { nombre_completo: nombre } },
         { $sort: { nombre: 1 } 
     }], function (err, product) {
         if (err) {
