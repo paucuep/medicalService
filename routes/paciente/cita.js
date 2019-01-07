@@ -16,7 +16,6 @@ mongoose.connect(db, function (err) {
 
 
 router.get('/paciente', (req, res) => {
-    console.log('entra a paciente: '+ req.query.paciente);
     let _id = req.query.paciente;
     if (_id != null) {
         paciente_Cita.aggregate([
@@ -118,8 +117,6 @@ router.get('/all', (req, res) => {
 
 
 router.get('/:id', (req, res) => {
-    console.log('entra a cita id');
-    console.log(req.query.id);
     paciente_Cita.find({ _id: req.query.id }, function (err, product) {
         if (err) {
             console.log(err)
@@ -149,18 +146,35 @@ router.post('/edit', (req, res) => {
     }
 
     if (paciente_cita._id != null) {
-        console.log('entra a update');
         paciente_Cita.findByIdAndUpdate(paciente_cita._id, req.body, function (err, product) {
             if (err) {
                 console.log(err)
             } else {
-                console.log('update bien');
                 res.status(200).send(product)
             }
         })
     }
 })
 
+router.post('/addPaciente', (req, res) => {
+    let paciente_CitaData = req.body;
+    paciente_Cita.find({ _id: paciente_CitaData._id }, function (err, product) {
+        if (err) {
+            console.log(err)
+        } else {
+            let pacienteExistente = new paciente_Cita(product[0])
+            pacienteExistente.id_paciente=paciente_CitaData.id_paciente;
+            paciente_Cita.findByIdAndUpdate(pacienteExistente._id,pacienteExistente, function (err, product2) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res.status(200).send(product2)
+                }
+            })
+        }
+    })
+    
+})
 
 router.post('/add', (req, res) => {
     console.log('entra a actualizar');
@@ -173,23 +187,20 @@ router.post('/add', (req, res) => {
 
     paciente_cita.fecha = d;
     paciente_cita.start = d;
-    console.log(d);
     if (paciente_cita._id != null) {
         paciente_Cita.findByIdAndUpdate(paciente_cita._id, paciente_cita, function (err, product) {
             if (err) {
                 console.log(err)
             } else {
-                console.log('update bien');
+                res.status(200).send(product)
             }
         })
     } else {
-        console.log('inserta nuev');
         paciente_cita._id = mongoose.Types.ObjectId();
         paciente_cita.save((err, registeredpaciente_Cita) => {
             if (err) {
                 console.log(err)
             } else {
-                console.log('entra');
                 res.status(200).send(registeredpaciente_Cita)
             }
         })

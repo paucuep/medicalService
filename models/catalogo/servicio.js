@@ -5,11 +5,23 @@ const Schema = mongoose.Schema;
 const catalogoSchema = new Schema({
     _id: String,
     id: Number,
-    id_centro: { type: String },  
-    especialidad_id: { type: String },  
-    especialidad_nombre: { type: String },  
-    nombre: String, 
-    costo:Number,
+    id_centro: { type: String },
+    especialidad_id: { type: String },
+    especialidad_nombre: { type: String },
+    nombre: String,
+    costo: Number,
+    kit: [{
+        es_cortesia: Boolean,
+        material: [{
+            id: String,
+            tipo:String,
+            cantidad: Number,
+            es_cortesia: Boolean,
+            activo:Boolean,
+            visible:Boolean,
+            observaciones:String
+        }],       
+    }],
     bitacora: [{
         usuario: String,
         fecha: Date,

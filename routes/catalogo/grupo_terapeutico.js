@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Catalogo = require('../../models/catalogo/aseguradora');
+const Grupo_Terapeutico = require('../catalogo/grupo_terapeutico');
 const jwt = require('jsonwebtoken')
 const db = "mongodb://pcuellar:Prcp1986@ds141043.mlab.com:41043/medical";
 // mongoose.Promise = global.Promise;
@@ -14,52 +14,32 @@ mongoose.connect(db, function (err) {
     }
 });
 
-router.get('/tipo', (req, res) => {
-    let tipo=Number(req.query.tipo);
-    Catalogo.aggregate([
-        { $match: { tipo_id: tipo } },
-        { $sort: { nombre: 1 } }
-    ], function (err, product) {
-        if (err) {
-            console.error('Error! ' + err)
-        } else {
-            res.send(product);
-        }
-    })
-});
 
 router.get('/all', (req, res) => {
-    Catalogo.aggregate([{ $sort: { nombre: 1 } }], function (err, product) {
-        if (err) {
-            console.error('Error! ' + err)
-        } else {
-            res.send(product);
-        }
+    Grupo_Terapeutico.find(function (err, product) {
+        if (err) return next(err);
+        res.send(product);
     })
 });
 
-
-
 router.get('/:id', (req, res) => {
-    Catalogo.findOne({ _id: req.query.id}, function (err, product) {
+    Grupo_Terapeutico.findById(req.query.id,function (err, product) {
         if (err) {
             console.log(err)
         } else {
             res.send(product);
         }
-
     })
 });
 
 router.post('/add', (req, res) => {
     let data = req.body;
-    let catalogo = new Catalogo(data)
+    let catalogo = new Grupo_Teapeutico(data)
     if (catalogo._id != null) {
-        Catalogo.findByIdAndUpdate(catalogo._id, req.body, function (err, product) {
+        Grupo_Terapeutico.findByIdAndUpdate(catalogo._id, req.body, function (err, product) {
             if (err) {
                 console.log(err)
             } else {
-               console.log('update bien');
                res.status(200).send(product)
             }
         })
@@ -70,11 +50,11 @@ router.post('/add', (req, res) => {
             if (err) {
                 console.log(err)
             } else {
-                console.log('entra');
                 res.status(200).send(registeredpaciente_Cita)
             }
         })
     }
 })
+
 
 module.exports = router;

@@ -61,6 +61,7 @@ router.post('/add', (req, res) => {
     let paciente_consulta = new paciente_Consulta(paciente_CosultaData)
 
     console.log(paciente_consulta);
+    console.log(paciente_consulta.procedimiento);
     if (paciente_consulta._id != null) {
         paciente_Consulta.findByIdAndUpdate(paciente_consulta._id, paciente_consulta, function (err, product) {
             if (err) {
