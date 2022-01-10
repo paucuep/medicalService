@@ -3,8 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Generico = require('../models/generico');
 const jwt = require('jsonwebtoken')
-const db = "mongodb://pcuellar:Prcp1986@ds141043.mlab.com:41043/medical";
-// mongoose.Promise = global.Promise;
+const db = "mongodb+srv://paucuep:Prcp1986@cluster0.yfaie.mongodb.net/medical?retryWrites=true&w=majority"
 
 mongoose.connect(db, function (err) {
     if (err) {
